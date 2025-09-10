@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const morgan = require('morgan');
 const session = require('express-session');
+const MongoStore = require("connect-mongo");
+const isSignedIn = require("./middleware/is-signed-in.js");
 
 // Controllers
 const authController = require('./controllers/auth.js');
@@ -35,6 +37,9 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
 
@@ -49,12 +54,8 @@ app.use('/auth', authController);
 
 // PROTECTED
 
-app.get("/vip-lounge", (req, res) => {
-  if (req.session.user) {
+app.get("/vip-lounge", isSignedIn, (req, res) => {
     res.send(`Welcome to the party ${req.session.user.username}.`);
-  } else {
-    res.send("Sorry, no guests allowed.");
-  }
 });
 
 app.listen(port, () => {
