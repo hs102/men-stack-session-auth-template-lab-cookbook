@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= profile.username %>'s Pantry</title>
+</head>
+<body>
+  <%- include('../partials/_navbar.ejs') %>
+  <h1><%= profile.username %>'s Pantry</h1>
+
+  <% if (profile.pantry && profile.pantry.length) { %>
+    <ul>
+      <% profile.pantry.forEach(item => { %>
+        <li><%= item.name %></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>This pantry is empty.</p>
+  <% } %>
+</body>
+</html>

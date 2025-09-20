@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community</title>
+</head>
+<body>
+  <%- include('../partials/_navbar.ejs') %>
+  <h1>Explore Our Community</h1>
+
+  <% if (users && users.length) { %>
+    <ul>
+      <% users.forEach(u => { %>
+        <li>
+          <a href="/users/<%= u._id %>"><%= u.username %></a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No users found.</p>
+  <% } %>
+</body>
+</html>

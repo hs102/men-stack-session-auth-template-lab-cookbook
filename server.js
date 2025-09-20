@@ -15,11 +15,21 @@ const passUserToView = require("./middleware/pass-user-to-view.js");
 
 // Controllers
 const authController = require('./controllers/auth.js');
+const foodsController = require('./controllers/foods.js');
+const usersController = require('./controllers/users.js');
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : '3000';
 
-mongoose.connect(process.env.MONGODB_URI);
+// Allow a sensible local default if .env isn't set
+const mongoUri = (process.env.MONGODB_URI && process.env.MONGODB_URI.trim())
+  ? process.env.MONGODB_URI.trim()
+  : 'mongodb://127.0.0.1:27017/cookbook';
+if (!process.env.MONGODB_URI) {
+  console.warn('MONGODB_URI not set in .env, defaulting to mongodb://127.0.0.1:27017/cookbook');
+}
+
+mongoose.connect(mongoUri);
 
 mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
@@ -35,11 +45,11 @@ app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'dev-secret-change-me',
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
+      mongoUrl: mongoUri,
     }),
   })
 );
@@ -52,11 +62,12 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authController);
 
-// PROTECTED
+// Community (public pages to browse users)
+app.use('/users', usersController);
 
-app.get("/vip-lounge", isSignedIn, (req, res) => {
-    res.send(`Welcome to the party ${req.session.user.username}.`);
-});
+// PROTECTED pantry routes (must be after isSignedIn)
+app.use(isSignedIn);
+app.use('/users/:userId/foods', foodsController);
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);
