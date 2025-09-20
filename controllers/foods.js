@@ -70,6 +70,26 @@ router.get('/:itemId/edit', async (req, res) => {
   }
 });
 
+// SHOW - view a specific item
+router.get('/:itemId', async (req, res) => {
+  try {
+    const { userId, itemId } = req.params;
+    if (!req.session.user || String(req.session.user._id) !== String(userId)) {
+      return res.redirect('/auth/sign-in');
+    }
+    const currentUser = await User.findById(userId);
+    if (!currentUser) return res.redirect('/');
+
+    const item = currentUser.pantry.id(itemId);
+    if (!item) return res.redirect(`/users/${userId}/foods`);
+
+    res.render('foods/show.ejs', { userId, item });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
+});
+
 // UPDATE - update a specific item
 router.put('/:itemId', async (req, res) => {
   try {
