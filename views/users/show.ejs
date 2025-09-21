@@ -7,7 +7,7 @@
 </head>
 <body>
   <%- include('../partials/_navbar.ejs') %>
-  <h1><%= profile.username %>'s Pantry</h1>
+  <h1><%= profile.username %>'s food stash</h1>
 
   <% if (profile.pantry && profile.pantry.length) { %>
     <ul>
@@ -16,7 +16,7 @@
       <% }) %>
     </ul>
   <% } else { %>
-    <p>This pantry is empty.</p>
+  <p>This pantry is empty—for now.</p>
   <% } %>
 </body>
 </html>

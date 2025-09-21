@@ -7,12 +7,12 @@
 </head>
 <body>
   <%- include('../partials/_navbar.ejs') %>
-  <h1>Add a New Item</h1>
+  <h1>cook smthin frr (add item)</h1>
 
   <form action="/users/<%= userId %>/foods" method="POST">
     <label for="name">Name</label>
     <input type="text" id="name" name="name" required />
-    <button type="submit">Save</button>
+  <button type="submit">Add to pantry</button>
   </form>
 
   <p><a href="/users/<%= userId %>/foods">Back to Pantry</a></p>

@@ -7,9 +7,9 @@
 </head>
 <body>
   <%- include('../partials/_navbar.ejs') %>
-  <h1>Welcome to my Pantry</h1>
+  <h1>My Pantry </h1>
 
-  <p><a href="/users/<%= userId %>/foods/new">Add New Item</a></p>
+  <p><a href="/users/<%= userId %>/foods/new">Add something tasty</a></p>
 
   <% if (pantry && pantry.length) { %>
     <ul>
@@ -24,7 +24,7 @@
       <% }) %>
     </ul>
   <% } else { %>
-    <p>There are no items in this pantry.</p>
+  <p>brokie alert : empty pantry</p>
   <% } %>
 </body>
 </html>
